@@ -19,4 +19,9 @@ const deployServer = (port) =>
 
 app.use(morgan("dev"));
 
+app.use((req, res, next) => {
+  debug(chalk.bgBlack.magenta(`A request has arrived to ${req.url}`));
+  next();
+});
+
 module.exports = deployServer;
