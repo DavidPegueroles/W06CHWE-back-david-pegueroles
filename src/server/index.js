@@ -1,3 +1,4 @@
+const chalk = require("chalk");
 const express = require("express");
 const morgan = require("morgan");
 const debug = require("debug")("robots:server");
@@ -7,7 +8,7 @@ const app = express();
 const deployServer = (port) =>
   new Promise((resolve, reject) => {
     const server = app.listen(port, () => {
-      debug(`Server is up at http://localhost:${port}`);
+      debug(chalk.green(`Server is up at http://localhost:${port}`));
       resolve();
     });
 
