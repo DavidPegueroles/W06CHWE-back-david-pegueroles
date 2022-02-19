@@ -3,6 +3,7 @@ const chalk = require("chalk");
 const express = require("express");
 const morgan = require("morgan");
 const { notFoundError, generalError } = require("./middlewares/errors");
+const robotsRouter = require("./routers/robotsRouter");
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use((req, res, next) => {
   debug(chalk.bgBlack.magenta(`A request has arrived to ${req.url}`));
   next();
 });
+
+app.use("/robots", robotsRouter);
 
 app.use(notFoundError);
 app.use(generalError);
