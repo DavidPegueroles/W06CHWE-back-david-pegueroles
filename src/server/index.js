@@ -2,6 +2,7 @@ const debug = require("debug")("robots:server");
 const chalk = require("chalk");
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const { notFoundError, generalError } = require("./middlewares/errors");
 const robotsRouter = require("./routers/robotsRouter");
 
@@ -25,6 +26,8 @@ app.use((req, res, next) => {
   debug(chalk.bgBlack.magenta(`A request has arrived to ${req.url}`));
   next();
 });
+
+app.use(cors());
 
 app.use("/robots", robotsRouter);
 
