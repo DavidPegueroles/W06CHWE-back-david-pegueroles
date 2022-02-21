@@ -1,11 +1,13 @@
 const { model, Schema } = require("mongoose");
 
+const validateStats = (stat) => stat <= 10 && stat >= 0;
+
 const RobotSchema = new Schema({
   name: {
     type: String,
     required: true,
   },
-  image_url: {
+  url: {
     type: String,
     required: true,
   },
@@ -15,12 +17,14 @@ const RobotSchema = new Schema({
       required: true,
       min: 0,
       max: 10,
+      validate: validateStats,
     },
     resistance: {
       type: Number,
       required: true,
       min: 0,
       max: 10,
+      validate: validateStats,
     },
     creation_date: {
       type: Date,

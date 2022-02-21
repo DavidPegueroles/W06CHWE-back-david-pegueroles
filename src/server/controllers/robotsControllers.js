@@ -18,4 +18,11 @@ const deleteRobot = async (req, res) => {
   res.json({ robot });
 };
 
-module.exports = { getRobots, getARobot, deleteRobot };
+const createRobot = async (req, res) => {
+  const robot = req.body;
+  const newRobot = await Robot.create(robot);
+  res.status(201);
+  res.json(newRobot);
+};
+
+module.exports = { getRobots, getARobot, deleteRobot, createRobot };
