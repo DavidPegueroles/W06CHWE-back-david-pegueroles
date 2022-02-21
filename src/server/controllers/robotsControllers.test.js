@@ -1,10 +1,5 @@
 const Robot = require("../../database/models/Robot");
-const {
-  getRobots,
-  getARobot,
-  deleteRobot,
-  createRobot,
-} = require("./robotsControllers");
+const { getRobots, getARobot, deleteRobot } = require("./robotsControllers");
 
 jest.mock("../../database/models/Robot");
 
