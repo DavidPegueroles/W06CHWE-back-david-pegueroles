@@ -14,7 +14,7 @@ const getARobot = async (req, res) => {
 
 const deleteRobot = async (req, res) => {
   const robot = await Robot.findByIdAndDelete(req.params.idRobot);
-  res.status(202);
+  res.status(200);
   res.json({ robot });
 };
 

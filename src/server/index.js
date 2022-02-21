@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const { notFoundError, generalError } = require("./middlewares/errors");
 const robotsRouter = require("./routers/robotsRouter");
+const usersRouter = require("./routers/usersRouter");
 
 const app = express();
 
@@ -22,14 +23,10 @@ const deployServer = (port) =>
 
 app.use(morgan("dev"));
 
-app.use((req, res, next) => {
-  debug(chalk.bgBlack.magenta(`A request has arrived to ${req.url}`));
-  next();
-});
-
 app.use(cors());
 app.use(express.json());
 
+app.use("/user", usersRouter);
 app.use("/robots", robotsRouter);
 
 app.use(notFoundError);
