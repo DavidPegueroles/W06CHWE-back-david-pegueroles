@@ -11,7 +11,7 @@ describe("Given a getRobots controller", () => {
   describe("When it receives a response", () => {
     test("Then it should call method json of the received response", async () => {
       const res = {
-        status: jest.fn(),
+        status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
       const robots = [
@@ -26,12 +26,14 @@ describe("Given a getRobots controller", () => {
           url: "",
         },
       ];
+      const status = 200;
 
       Robot.find = jest.fn().mockResolvedValue(robots);
 
       await getRobots(null, res);
 
       expect(Robot.find).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(status);
       expect(res.json).toHaveBeenCalledWith({ robots });
     });
   });
@@ -46,7 +48,7 @@ describe("Given a geARobot controller", () => {
         },
       };
       const res = {
-        status: jest.fn(),
+        status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
       const robot = [
@@ -61,13 +63,37 @@ describe("Given a geARobot controller", () => {
           url: "",
         },
       ];
+      const status = 200;
 
       Robot.findById = jest.fn().mockResolvedValue(robot);
 
       await getARobot(req, res);
 
       expect(Robot.findById).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(status);
       expect(res.json).toHaveBeenCalledWith({ robot });
+    });
+  });
+
+  describe("When it's invoked with req , res and next and req doesn't have the propertiy query.idRobot and an the Robot.find results rejected", () => {
+    test("Then the function next should be called with the reject reason", async () => {
+      const req = {
+        params: {},
+      };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const next = jest.fn();
+      const errorMessage =
+        "You just killed all the robots. Please come again later in a hope of finding what you wanted :(";
+
+      Robot.findById = jest.fn().mockRejectedValue(errorMessage);
+
+      await getARobot(req, res, next);
+
+      expect(Robot.findById).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(errorMessage);
     });
   });
 });
@@ -81,7 +107,7 @@ describe("Given a deleteRobot controller", () => {
         },
       };
       const res = {
-        status: jest.fn(),
+        status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
       const robot = [
