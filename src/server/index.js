@@ -1,5 +1,3 @@
-const debug = require("debug")("robots:server");
-const chalk = require("chalk");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -9,21 +7,8 @@ const usersRouter = require("./routers/usersRouter");
 
 const app = express();
 
-const deployServer = (port) =>
-  new Promise((resolve, reject) => {
-    const server = app.listen(port, () => {
-      debug(chalk.green(`Server is up at http://localhost:${port}`));
-      resolve();
-    });
-
-    server.on("error", (error) => {
-      reject(new Error(`Error on server: ${error.message}`));
-    });
-  });
-
-app.use(morgan("dev"));
-
 app.use(cors());
+app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/user", usersRouter);
@@ -32,4 +17,4 @@ app.use("/robots", robotsRouter);
 app.use(notFoundError);
 app.use(generalError);
 
-module.exports = deployServer;
+module.exports = app;
