@@ -1,5 +1,10 @@
 const Robot = require("../../database/models/Robot");
-const { getRobots, getARobot, deleteRobot } = require("./robotsControllers");
+const {
+  getRobots,
+  getARobot,
+  deleteRobot,
+  createRobot,
+} = require("./robotsControllers");
 
 jest.mock("../../database/models/Robot");
 
@@ -75,8 +80,8 @@ describe("Given a geARobot controller", () => {
     });
   });
 
-  describe("When it's invoked with req , res and next and req doesn't have the propertiy query.idRobot and an the Robot.find results rejected", () => {
-    test("Then the function next should be called with the reject reason", async () => {
+  describe("When it receives a response with no id in the params", () => {
+    test("Then it should call next function with an error message", async () => {
       const req = {
         params: {},
       };
@@ -129,6 +134,36 @@ describe("Given a deleteRobot controller", () => {
 
       expect(Robot.findByIdAndDelete).toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith({ robot });
+    });
+  });
+});
+
+describe("Given a createRobot controller", () => {
+  describe("When it receives a response", () => {
+    test("Then it should call status and json methods of the received response", async () => {
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const robot = {
+        characteristics: {
+          velocity: 9,
+          resistance: 7,
+          creation_date: "",
+        },
+        _id: "1",
+        name: "Luis",
+        url: "",
+      };
+      const status = 201;
+
+      Robot.create = jest.fn().mockResolvedValue(robot);
+
+      await createRobot(robot, res);
+
+      expect(Robot.create).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(status);
+      expect(res.json).toHaveBeenCalledWith(robot);
     });
   });
 });
