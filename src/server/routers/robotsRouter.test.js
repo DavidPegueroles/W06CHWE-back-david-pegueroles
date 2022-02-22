@@ -45,22 +45,41 @@ afterAll(async () => {
   await server.stop();
 });
 
-describe("Given a robots endpoint", () => {
-  describe("When it receives a GET request", () => {
+describe("Given a /robots endpoint", () => {
+  describe("When it receives a GET request in the root", () => {
     test("Then it should respond with a 200 status code and a list of robots", async () => {
       const { body } = await request(app).get("/robots").expect(200);
 
       expect(body.robots).toHaveLength(2);
+      expect(body).toHaveProperty("robots");
+      expect(body.robots[0]).toHaveProperty("name");
     });
   });
 
-  describe("When it receives a POST request", () => {
+  describe("When it receives a POST request in the root", () => {
     test("Then it should respond with a 404 status code", async () => {
       const errorMessage = "Resource not found";
 
       const { body } = await request(app).post("/robots").expect(404);
 
       expect(body.error).toBe(errorMessage);
+    });
+  });
+
+  describe("When it receives a GET request in /:id", () => {
+    test("Then it should respond with a 200 status code and a robot", async () => {
+      const {
+        body: {
+          robots: {
+            0: { id },
+          },
+        },
+      } = await request(app).get("/robots").expect(200);
+
+      const { body } = await request(app).get(`/robots/${id}`).expect(200);
+
+      expect(body.robot).toHaveProperty("id");
+      expect(body.robot.id).toBe(id);
     });
   });
 });
